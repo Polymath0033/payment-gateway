@@ -58,7 +58,7 @@ public class JwtService {
 
 
 
-    private LocalDateTime expirationDate(String token) {
+    public LocalDateTime expirationDate(String token) {
         Date expirationDate = extractClaim(token,Claims::getExpiration);
         return convertDateToLocalTime(expirationDate);
     }

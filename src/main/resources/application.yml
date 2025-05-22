@@ -5,12 +5,13 @@ jwt:
 
 
 spring:
-  application.name: payment_gateway
+  application:
+    name: payment_gateway
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/payment_gateway_app
     username: postgres
-    password: 1234
+    password: pg1234
   jpa:
     hibernate:
       ddl-auto: validate
@@ -24,6 +25,6 @@ spring:
     baseline-on-migrate: true
     enabled: true
     user: postgres
-    password: 1234
+    password: pg1234
     baseline-description: "init"
     baseline-version: 1
