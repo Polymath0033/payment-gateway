@@ -25,13 +25,13 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final TokenService tokenService;
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, TokenService tokenService) {
+    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, TokenService tokenService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override

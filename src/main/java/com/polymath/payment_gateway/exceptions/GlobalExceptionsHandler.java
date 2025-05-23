@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.polymath.payment_gateway.dto.response.ErrorResponse;
 @RestControllerAdvice
-public class GlobalExceptions {
+public class GlobalExceptionsHandler {
 
     @ExceptionHandler(CustomNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

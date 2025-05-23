@@ -17,6 +17,14 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users",indexes = {
+        @Index(name="idx_users_email_active_verified",columnList = "email, is_active, email_verified"),
+        @Index(name="idx_users_role_active", columnList = "role, is_active"),
+        @Index(name = "idx_users_email_verified_role",columnList = "email_verified, role"),
+        @Index(name = "idx_users_active_created_at",columnList = "is_active, created_at"),
+        @Index(name = "idx_users_created_role",columnList = "created_at,role")
+
+})
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
