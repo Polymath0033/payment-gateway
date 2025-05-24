@@ -19,4 +19,11 @@ public class GlobalExceptionsHandler {
     public ErrorResponse handleBadRequest(CustomBadRequest ex){
         return new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(),System.currentTimeMillis());
     }
+
+    @ExceptionHandler(EmailSendingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleEmailSendingException(EmailSendingException ex){
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage(),System.currentTimeMillis());
+    }
+
 }

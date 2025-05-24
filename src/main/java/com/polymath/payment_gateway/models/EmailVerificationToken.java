@@ -42,5 +42,13 @@ public class EmailVerificationToken {
         this.expiresAt = LocalDateTime.now().plusHours(expiresHour);
     }
 
+    public boolean isExpired(){
+        return LocalDateTime.now().isAfter(expiresAt);
+    }
+
+    public boolean isVerified(){
+        return verifiedAt !=null;
+    }
+
 
 }

@@ -9,6 +9,7 @@ import com.polymath.payment_gateway.repositories.RefreshTokenRepository;
 import com.polymath.payment_gateway.repositories.UserRepository;
 import com.polymath.payment_gateway.services.JwtService;
 import com.polymath.payment_gateway.services.TokenService;
+import com.polymath.payment_gateway.utils.TimeToSecondsConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,7 +62,7 @@ public class TokenServiceImpl implements TokenService {
         }
         LocalDateTime accessTokenExpirationTime = jwtService.expirationDate(accessToken);
         LocalDateTime refreshTokenExpirationTime = jwtService.expirationDate(refreshToken.getToken());
-        return new RefreshTokenResponse(accessToken, refreshToken.getToken(), calculateExpiresIn(accessTokenExpirationTime),calculateExpiresIn(refreshTokenExpirationTime),refreshToken.isRevoked());
+        return new RefreshTokenResponse(accessToken, refreshToken.getToken(), TimeToSecondsConverter.convertDateTimeToSeconds(accessTokenExpirationTime),TimeToSecondsConverter.convertDateTimeToSeconds(refreshTokenExpirationTime),refreshToken.isRevoked());
     }
 
     @Override
@@ -84,9 +85,7 @@ public class TokenServiceImpl implements TokenService {
         }else{
             saveToken(accessToken, user);
         }
-        return new RefreshTokenResponse(accessToken,refreshToken,calculateExpiresIn(accessTokenExpiresTime),calculateExpiresIn(refreshTokenExpiresTime),false);
+        return new RefreshTokenResponse(accessToken,refreshToken, TimeToSecondsConverter.convertDateTimeToSeconds(accessTokenExpiresTime),TimeToSecondsConverter.convertDateTimeToSeconds(refreshTokenExpiresTime),false);
     }
-    public static long calculateExpiresIn(LocalDateTime expiresAt) {
-        return Math.max(0, expiresAt.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
-    }
+
 }

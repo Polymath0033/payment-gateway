@@ -44,9 +44,9 @@ public class JwtFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }else{
+                    throw new BadCredentialsException("Invalid token,please log in again");
                 }
-            }else{
-                throw new BadCredentialsException("Invalid token,please log in again");
             }
         }catch(ExpiredJwtException expiredJwtException){
 
