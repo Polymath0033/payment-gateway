@@ -1,7 +1,9 @@
 package com.polymath.payment_gateway.controllers;
 
+import com.polymath.payment_gateway.dto.request.LoginRequest;
 import com.polymath.payment_gateway.dto.request.SignupRequest;
 import com.polymath.payment_gateway.dto.response.ApiResponse;
+import com.polymath.payment_gateway.dto.response.AuthResponse;
 import com.polymath.payment_gateway.dto.response.EmailVerificationResponse;
 import com.polymath.payment_gateway.services.AuthService;
 import com.polymath.payment_gateway.services.EmailVerificationService;
@@ -37,5 +39,11 @@ public class AuthController {
     public ResponseEntity<?> resendVerification(@Valid @RequestBody String email) {
         emailVerificationService.resendVerificationEmail(email);
         return ApiResponse.handleApiErrorResponse("",HttpStatus.OK,"resendVerificationEmail");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest request) {
+       AuthResponse response = authService.logIn(request);
+       return ApiResponse.handleApiErrorResponse(response,HttpStatus.OK,"loginUser");
     }
 }

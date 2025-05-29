@@ -4,6 +4,7 @@ import com.polymath.payment_gateway.dto.response.AuthResponse;
 import com.polymath.payment_gateway.dto.response.EmailVerificationResponse;
 import com.polymath.payment_gateway.dto.response.RefreshTokenResponse;
 import com.polymath.payment_gateway.dto.response.UserInfo;
+import com.polymath.payment_gateway.exceptions.CustomBadRequest;
 import com.polymath.payment_gateway.exceptions.CustomNotFound;
 import com.polymath.payment_gateway.exceptions.EmailSendingException;
 import com.polymath.payment_gateway.models.EmailVerificationToken;
@@ -60,7 +61,7 @@ public class EmailVerificationImpl implements EmailVerificationService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,true,"UTF-8");
 
-            helper.setFrom(fromEmail);
+            helper.setFrom("no-reply@topay.com");
             helper.setTo(user.getEmail());
             helper.setSubject("Verify Your Email - ToPay");
 
@@ -68,7 +69,7 @@ public class EmailVerificationImpl implements EmailVerificationService {
             Context context = new Context();
             context.setVariable("username",user.getUsername());
             context.setVariable("verificationUrl",verificationUrl);
-            context.setVariable("expirationHours",expirationHours);
+            context.setVariable("expirationHours",expirationHours/3600);
             String htmlContent = templateEngine.process("email-verification",context);
             helper.setText(htmlContent, true);
             mailSender.send(message);
@@ -87,15 +88,15 @@ public class EmailVerificationImpl implements EmailVerificationService {
     public EmailVerificationResponse verifyEmail(String token) {
         Optional<EmailVerificationToken> tokenOpt = emailVerificationTokenRepository.findByToken(token);
         if(tokenOpt.isEmpty()){
-            return new EmailVerificationResponse(VerificationResult.INVALID_TOKEN,null);
+            throw new CustomBadRequest(VerificationResult.INVALID_TOKEN.getMessage());
         }
         EmailVerificationToken emailVerificationToken = tokenOpt.get();
         if(emailVerificationToken.isVerified()){
-            return new EmailVerificationResponse(VerificationResult.EXPIRED_TOKEN,null);
+            throw new CustomBadRequest(VerificationResult.ALREADY_VERIFIED.getMessage());
         }
         if(emailVerificationToken.isExpired()){
             emailVerificationTokenRepository.delete(emailVerificationToken);
-            return new EmailVerificationResponse(VerificationResult.EXPIRED_TOKEN,null);
+            throw new CustomBadRequest(VerificationResult.EXPIRED_TOKEN.getMessage());
         }
         emailVerificationToken.setVerifiedAt(LocalDateTime.now());
         emailVerificationTokenRepository.save(emailVerificationToken);

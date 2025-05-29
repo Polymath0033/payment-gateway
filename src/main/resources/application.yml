@@ -60,10 +60,10 @@ spring:
         debug: false
         transport:
           protocol: smtp
-management:
-  health:
-    mail:
-      enabled: false
+#management:
+#  health:
+#    mail:
+#      enabled: false
 #logging:
 #  level:
 #    org.flywaydb: INFO
